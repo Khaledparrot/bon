@@ -69,7 +69,7 @@ function loadCustomers() {
               height: 30px;
               border: none;
               background: #f5f5f5;
-              border-radius: 50%;
+              border-radius: 6px;
               cursor: pointer;
               display: flex;
               align-items: center;
@@ -94,7 +94,7 @@ function loadCustomers() {
               height: 30px;
               border: none;
               background: #f5f5f5;
-              border-radius: 50%;
+              border-radius: 6px;
               cursor: pointer;
               display: flex;
               align-items: center;
@@ -420,6 +420,7 @@ window.onclick = (e) => {
 // Initialize DB
 
 openDB();
+
 
 
 
