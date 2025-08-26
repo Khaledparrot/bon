@@ -90,16 +90,19 @@ function deleteCustomer(id) {
 function viewInvoices(customerId, name) {
   const invoiceSection = document.getElementById('invoiceSection');
 
-  // If already visible and clicking the same customer, hide it
-  if (invoiceSection.style.display === 'block' && currentCustomerId === customerId) {
+  // Get the actual display value (not just inline style)
+  const isCurrentlyVisible = window.getComputedStyle(invoiceSection).display !== 'none';
+
+  // If already open for this customer → close it
+  if (isCurrentlyVisible && currentCustomerId === customerId) {
     invoiceSection.style.display = 'none';
     currentCustomerId = null;
-  } 
-  // Otherwise, show it
+  }
+  // If clicking a different customer or currently closed → open it
   else {
     currentCustomerId = customerId;
     document.getElementById('customerNameHeader').textContent = `Factures: ${name}`;
-    invoiceSection.style.display = 'block';
+    invoiceSection.style.display = 'block'; // Ensure it's block
     loadInvoices(customerId);
   }
 }
@@ -304,3 +307,4 @@ window.onclick = (e) => {
 // Initialize DB
 
 openDB();
+
