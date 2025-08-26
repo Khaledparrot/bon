@@ -46,16 +46,52 @@ function loadCustomers() {
       const li = document.createElement('li');
       li.innerHTML = `
         ${customer.name}
-        <button onclick="deleteCustomer(${customer.id})" style="float:right; color:#d32f2f; border:none; background:none; padding:0; width:25px; height:25px;" title="Supprimer">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-  </svg>
-</button>
-<button onclick="viewInvoices(${customer.id}, '${customer.name}')" style="float:right; margin-right:5px; color:#1976d2; border:none; background:none; padding:0; width:25px; height:28px;" title="Voir les factures">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
-  </svg>
-</button>
+        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; z-index: 10;">
+          <!-- View Invoices Button -->
+          <button 
+            type="button" 
+            onclick="viewInvoices(${customer.id}, '${escapeJS(customer.name)}')" 
+            style="
+              width: 30px; 
+              height: 30px; 
+              border: none; 
+              background: none; 
+              padding: 0; 
+              cursor: pointer; 
+              display: flex; 
+              align-items: center; 
+              justify-content: center; 
+              color: #1976d2; 
+              border-radius: 50%; 
+              transition: background 0.2s;"
+            title="Voir les factures"
+            aria-label="Voir les factures">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+            </svg>
+          </button>
+        
+          <!-- Delete Customer Button -->
+          <button 
+            type="button" 
+            onclick="deleteCustomer(${customer.id})" 
+            style="
+              width: 30px; 
+              height: 30px; 
+              border: none; 
+              background: none; 
+              padding: 0; 
+              cursor: pointer; 
+              display: flex; 
+              align-items: center; 
+              justify-content: center; 
+              color: #d32f2f; 
+              border-radius: 50%; 
+              transition: background 0.2s;"
+            title="Supprimer"
+            aria-label="Supprimer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6
       `;
       customerList.appendChild(li);
     });
@@ -360,6 +396,7 @@ window.onclick = (e) => {
 // Initialize DB
 
 openDB();
+
 
 
 
