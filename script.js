@@ -131,34 +131,49 @@ function loadInvoices(customerId) {
 
   request.onsuccess = () => {
     const list = document.getElementById('invoiceList');
-    list.innerHTML = ''; // Clear list
+    list.innerHTML = '';
 
     request.result.forEach(inv => {
       const li = document.createElement('li');
 
-      // Calculate total from items or fallback to amount
+      // Calculate total
       const total = inv.items?.reduce(
-        (sum, i) => sum + (parseFloat(i.price) || 0),
+        (sum, item) => sum + (parseFloat(item.price) || 0),
         0
       ) || inv.amount || 0;
 
-      // Escape HTML to prevent XSS (minimal escaping for text)
-      const title = inv.title.replace(/&/g, '&amp;')
-                             .replace(/</g, '<')
-                             .replace(/>/g, '>');
+      // Escape title
+      const escapedTitle = (inv.title || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '<')
+        .replace(/>/g, '>');
 
-      const date = inv.date;
+      // Escape photoUrl for use in attribute
+      const photoUrl = inv.photoUrl
+        ? inv.photoUrl.replace(/'/g, '&#x27;')
+        : '';
 
-      // Properly escape photoUrl for JS string and HTML
-      const photoUrl = inv.photoUrl ? `'${inv.photoUrl.replace(/'/g, "&#x27;")}'" : '';
+      // Build HTML as a string without nested template issues
+      let imageButton = '';
+      if (photoUrl) {
+        imageButton = `
+          <button type="button" onclick="viewImage('${photoUrl}')" aria-label="View Invoice Image" title="View Photo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </button>
+        `;
+      }
 
       li.innerHTML = `
         <div class="invoice-item">
           <div class="invoice-header">
-            <span class="invoice-title">${title}</span>
+            <span class="invoice-title">${escapedTitle}</span>
             <span class="invoice-price">${total.toFixed(2)} DZD</span>
           </div>
-          <div class="invoice-date">${date}</div>
+          <div class="invoice-date">${inv.date}</div>
           <div class="invoice-actions">
             <button type="button" onclick="editInvoice(${inv.id})" aria-label="Edit Invoice" title="Edit">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -171,15 +186,7 @@ function loadInvoices(customerId) {
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
               </svg>
             </button>
-            ${inv.photoUrl ? `
-            <button type="button" onclick="viewImage(${photoUrl})" aria-label="View Invoice Image" title="View Photo">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-            </button>
-            ` : ''}
+            ${imageButton}
           </div>
         </div>
       `;
@@ -189,7 +196,7 @@ function loadInvoices(customerId) {
   };
 
   request.onerror = () => {
-    console.error('Error loading invoices:', request.error);
+    console.error('Failed to load invoices:', request.error);
   };
 }
 
@@ -353,6 +360,7 @@ window.onclick = (e) => {
 // Initialize DB
 
 openDB();
+
 
 
 
