@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="format-detection" content="telephone=no">
+  <title>Factures Manager</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Mobile App Mode -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#007bff">
+<link rel="apple-touch-icon" href="icon.png">
+
+<!-- Add simple icon (create 192x192 png or use favicon) -->
+</head>
+<body>
+
+  <h1>Factures Manager</h1>
+
+  <!-- Add Customer -->
+  <div class="panel">
+    <h2>Clients</h2>
+    <button id="addCustomerBtn">➕ Ajouter Client</button>
+    <ul id="customerList"></ul>
+  </div>
+
+  <!-- Invoices Section -->
+  <div class="panel" id="invoiceSection" style="display:none;">
+    <h2 id="customerNameHeader"></h2>
+    <button id="addInvoiceBtn">➕ Ajouter Facture</button>
+    <ul id="invoiceList"></ul>
+  </div>
+
+  <!-- Modal for Adding/Editing -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <form id="invoiceForm">
+        <h3 id="modalTitle">Nouvelle Facture</h3>
+        <input type="text" id="invoiceTitle" placeholder="Titre" required />
+        <input type="number" id="invoiceAmount" placeholder="Montant" step="0.01" />
+        <input type="date" id="invoiceDate" required />
+        <div id="itemsContainer">
+          <h4>Articles</h4>
+          <div class="item-row">
+            <input type="text" placeholder="Description" class="item-desc" />
+            <input type="number" placeholder="Prix" class="item-price" step="0.01" />
+          </div>
+        </div>
+        <button type="button" id="addItemBtn">+ Ajouter Article</button>
+        <br/>
+        <label>Photo de la facture</label>
+        <input type="file"
+       id="invoicePhoto"
+       accept="image/*"
+       capture="environment"
+       aria-label="Prendre une photo ou sélectionner une image" />
+        <div id="photoPreview"></div>
+        <button type="submit">💾 Sauvegarder</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Image Viewer Modal -->
+  <div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="fullImage" />
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
