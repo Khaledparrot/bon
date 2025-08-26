@@ -32,7 +32,6 @@ function openDB() {
   };
 }
 
-// Load all customers
 function loadCustomers() {
   const tx = db.transaction('customers', 'readonly');
   const store = tx.objectStore('customers');
@@ -44,57 +43,82 @@ function loadCustomers() {
 
     request.result.forEach(customer => {
       const li = document.createElement('li');
+      li.style.position = 'relative';  // Needed for absolute positioning
+      li.style.padding = '12px 40px 12px 12px';  // Space for buttons
+      li.style.borderBottom = '1px solid #eee';
+      li.style.fontFamily = 'Arial, sans-serif';
+
       li.innerHTML = `
-        ${customer.name}
-        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; z-index: 10;">
+        <strong style="font-size: 16px; color: #333;">${customer.name}</strong>
+
+        <!-- Top-right action buttons -->
+        <div style="
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          display: flex;
+          gap: 6px;
+          z-index: 10;
+        ">
           <!-- View Invoices Button -->
           <button 
             type="button" 
-            onclick="viewInvoices(${customer.id}, '${escapeJS(customer.name)}')" 
+            onclick="viewInvoices(${customer.id}, '${customer.name.replace(/'/g, "\\'")}')"
             style="
-              width: 30px; 
-              height: 30px; 
-              border: none; 
-              background: none; 
-              padding: 0; 
-              cursor: pointer; 
-              display: flex; 
-              align-items: center; 
-              justify-content: center; 
-              color: #1976d2; 
-              border-radius: 50%; 
-              transition: background 0.2s;"
+              width: 30px;
+              height: 30px;
+              border: none;
+              background: #f5f5f5;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 0;
+              transition: all 0.2s ease;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            "
             title="Voir les factures"
             aria-label="Voir les factures">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#1976d2">
               <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
             </svg>
           </button>
-        
-          <!-- Delete Customer Button -->
+
+          <!-- Delete Button -->
           <button 
             type="button" 
-            onclick="deleteCustomer(${customer.id})" 
+            onclick="deleteCustomer(${customer.id})"
             style="
-              width: 30px; 
-              height: 30px; 
-              border: none; 
-              background: none; 
-              padding: 0; 
-              cursor: pointer; 
-              display: flex; 
-              align-items: center; 
-              justify-content: center; 
-              color: #d32f2f; 
-              border-radius: 50%; 
-              transition: background 0.2s;"
+              width: 30px;
+              height: 30px;
+              border: none;
+              background: #f5f5f5;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 0;
+              transition: all 0.2s ease;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            "
             title="Supprimer"
             aria-label="Supprimer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#d32f2f">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+            </svg>
+          </button>
+        </div>
       `;
+
       customerList.appendChild(li);
     });
+  };
+
+  request.onerror = () => {
+    console.error('Failed to load customers:', request.error);
+    customerList.innerHTML = '<li style="color: red;">Erreur de chargement</li>';
   };
 }
 
@@ -396,6 +420,7 @@ window.onclick = (e) => {
 // Initialize DB
 
 openDB();
+
 
 
 
