@@ -144,9 +144,20 @@ function loadInvoices(customerId) {
         </div>
         <div class="invoice-date">${inv.date}</div>
         <div class="invoice-actions">
-          <button onclick="editInvoice(${inv.id})">✏️</button>
-          <button onclick="deleteInvoice(${inv.id})" style="color:red;">🗑️</button>
-          ${inv.photoUrl ? '<button onclick="viewImage(\'' + inv.photoUrl + '\')">🖼️</button>' : ''}
+          <!-- Include Font Awesome locally -->
+          <link rel="stylesheet" href="/fonts/fontawesome.css">
+          
+          <!-- Then use: -->
+          <button onclick="editInvoice(${inv.id})" aria-label="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button onclick="deleteInvoice(${inv.id})" aria-label="Delete" style="color: #d9534f;">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+          ${inv.photoUrl ? `
+          <button onclick="viewImage('${inv.photoUrl}')" aria-label="View Image">
+            <i class="fas fa-image"></i>
+          </button>
         </div>
       `;
 
@@ -315,5 +326,6 @@ window.onclick = (e) => {
 // Initialize DB
 
 openDB();
+
 
 
