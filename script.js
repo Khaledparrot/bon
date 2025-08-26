@@ -86,12 +86,22 @@ function deleteCustomer(id) {
   tx.oncomplete = loadCustomers;
 }
 
-// View invoices for a customer
+// View or hide invoices for a customer
 function viewInvoices(customerId, name) {
-  currentCustomerId = customerId;
-  document.getElementById('customerNameHeader').textContent = `Factures: ${name}`;
-  document.getElementById('invoiceSection').style.display = 'block';
-  loadInvoices(customerId);
+  const invoiceSection = document.getElementById('invoiceSection');
+
+  // If already visible and clicking the same customer, hide it
+  if (invoiceSection.style.display === 'block' && currentCustomerId === customerId) {
+    invoiceSection.style.display = 'none';
+    currentCustomerId = null;
+  } 
+  // Otherwise, show it
+  else {
+    currentCustomerId = customerId;
+    document.getElementById('customerNameHeader').textContent = `Factures: ${name}`;
+    invoiceSection.style.display = 'block';
+    loadInvoices(customerId);
+  }
 }
 
 let currentCustomerId = null;
@@ -292,4 +302,5 @@ window.onclick = (e) => {
 };
 
 // Initialize DB
+
 openDB();
