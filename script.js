@@ -171,7 +171,15 @@ async function loadInvoices(customerId) {
     list.innerHTML = '';
 
     invoices.forEach(inv => {
-      const total = inv.items?.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0) || inv.amount || 0;
+      let items = [];
+      try {
+        items = inv.items ? JSON.parse(inv.items) : [];
+      } catch (e) {
+        console.warn("Failed to parse items:", e);
+        items = [];
+      }
+      
+      const total = items.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0) || inv.amount || 0;
       const escapedTitle = escapeHtml(inv.title || 'Sans titre');
       const photoUrl = inv.photo_url ? escapeHtml(inv.photo_url) : '';
 
@@ -337,7 +345,14 @@ async function editInvoice(id) {
 
     const itemsContainer = document.getElementById('itemsContainer');
     itemsContainer.innerHTML = '<h4>Articles</h4>';
-    inv.items.forEach(item => {
+    let items = [];
+    try {
+      items = inv.items ? JSON.parse(inv.items) : [];
+    } catch (e) {
+      items = [];
+    }
+    
+    items.forEach(item => {
       const row = document.createElement('div');
       row.className = 'item-row';
       row.innerHTML = `
